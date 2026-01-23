@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiles version="12">
+  <profile kind="CodeFormatterProfile" name="GoogleStyle" version="12">
+    <!-- Basic Google-style formatter adjustments -->
+    <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+    <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="2"/>
+    <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="100"/>
+    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="next_line"/>
+    <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="next_line"/>
+    <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_package" value="true"/>
+    <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement" value="true"/>
+    <setting id="org.eclipse.jdt.core.formatter.alignment_for_method_invocation_arguments" value="16"/>
+    <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration" value="16"/>
+  </profile>
+</profiles>
