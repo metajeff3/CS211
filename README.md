@@ -19,20 +19,4 @@ Weekly lesson summaries
 - **Week 9:** Advanced data structures
 - **Week 10:** Advanced data structures (continued)
 
-Repository structure
 
-- `src/` — source code for assignments and projects
-- `README.md` — this file
-
-Next steps (optional)
-
-- Add a `CONTRIBUTING.md` section
-- Add examples or a quick start section for running code
-- Split weekly summaries into separate markdown files under `docs/`
-
-If you prefer different wording or structure, tell me which parts to change.
-- **Week 7:** Linked lists
-
-- **Week 8:** Binary trees
-
-- **Week 9:** Advanced data structures
