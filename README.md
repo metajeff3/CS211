@@ -17,6 +17,6 @@ Weekly lesson summaries
 - **Week 7:** Linked lists
 - **Week 8:** Binary trees
 - **Week 9:** Advanced data structures
-- **Week 10:** Advanced data structures (continued)
+- **Week 10:** Advanced data structures 
 
 

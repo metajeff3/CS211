@@ -1,0 +1,239 @@
+/*
+ * name: Jeff spacek
+ * Date: Jan 30, 2026
+ * Description:
+ * This Java program is a superclass that is able
+ * to draw/generate triangles. Each triangle contains multiple objects,
+ * including random size, color, speed as well as rotation, zoom (in/out), and finally
+ * collision detection.
+ * 
+ */
+
+package assignment_01;
+
+import java.awt.Polygon;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+import java.util.*;
+import java.awt.image.BufferStrategy;
+
+// ArrayList to define Triangle
+class TriangleData {
+	int x;
+	int y;
+	int size;
+	int zoom;
+	int speedX;
+	int speedY;
+	int angle;
+	int angleSpeed;
+	int angleDirection;
+	Color color;
+
+}
+
+// super-class 'triangle'
+public class triangle extends JFrame implements Runnable {
+
+	private Thread triangleThread;
+	private boolean running = false;
+
+	public static ArrayList<TriangleData> myTriangle = new ArrayList<>();
+	static int width = 800;
+	static int height = 600;
+	static int howMany = 10;
+	public static int boardTop;
+	static Random rand = new Random();
+	static int R, G, B;
+
+	public triangle() {
+		super("CS211- Winter 2026");
+		setBounds(100, 100, width, height);
+		setResizable(false);
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+//		this.howMany = howMany;
+//		this.triangleThread = triangleThread;
+
+		createBufferStrategy(2);
+		createTriangle();
+	}
+
+	public static void createTriangle() {
+
+		for (int i = 0; i < howMany; i++) {
+			TriangleData TD = new TriangleData();
+			R = rand.nextInt(256);
+			G = rand.nextInt(256);
+			B = rand.nextInt(256);
+			TD.color = new Color(R, G, B);
+
+			TD.x = rand.nextInt(width);
+			TD.y = rand.nextInt(height);
+			TD.size = rand.nextInt(30) + 10;
+			TD.zoom = 1;
+			TD.speedX = rand.nextInt(5) + 1;
+			TD.speedY = rand.nextInt(5) + 1;
+
+			TD.angle = rand.nextInt(30);
+			TD.angleSpeed = rand.nextInt(2) + 1;
+
+			if (rand.nextInt(2) == 0) {
+				TD.angleSpeed *= -1;
+			}
+
+			myTriangle.add(TD);
+		}
+	}
+
+	public synchronized void start() {
+		running = true;
+		triangleThread = new Thread(this);
+		triangleThread.start();
+	}
+
+	public synchronized void stop() {
+		running = false;
+	 try {
+			triangleThread.join();
+			
+		} catch (InterruptedException e) {
+		e.getStackTrace();
+		}
+		}
+	 
+	 
+	 public void run() {
+		 while (running) {
+			 update();
+			 render();
+			 
+			 try {
+				 Thread.sleep(32); //0rg 16
+				 
+			 } catch (Exception e) {
+//				 e.getStackTrace();
+			 }
+		 }
+	 }
+
+	 public void update() { // movement & collision 
+	 
+		    for (TriangleData t : myTriangle) {
+
+		        // move
+		        t.x += t.speedX;
+		        t.y += t.speedY;
+
+		        // bounce
+		        if (t.x > width - t.size || t.x < t.size) {
+		            t.speedX *= -1;
+		        }
+
+		        if (t.y > height - t.size || t.y < boardTop + t.size) {
+		            t.speedY *= -1;
+		        }
+
+		        // rotate
+		        t.angle += t.angleSpeed;
+
+		        // zoom
+		        if (t.size > 40 || t.size < 5) {
+		            t.zoom *= -1;
+		        }
+		        t.size += t.zoom;
+		    }
+		}
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 public void render() { repaint(); }
+
+	public void paint(Graphics g) {
+		BufferStrategy bs = getBufferStrategy();
+		if (bs == null) 
+			return;
+		
+
+		Graphics bg = bs.getDrawGraphics(); // bg = buffer graphics
+		
+		boardTop = height - getContentPane().getSize().height;
+		bg.setColor(Color.BLACK);
+		
+		bg.fillRect(0, 0, width, height);
+		
+
+		    for (TriangleData t : myTriangle) {
+		        bg.setColor(t.color);
+		        drawTriangle(bg, t.x, t.y, t.size, t.angle, t.angleSpeed);
+		    }
+
+		    bg.dispose();
+		    bs.show();
+		}
+
+	
+  
+
+ public void drawTriangle(Graphics g, int sx, int sy, int size, int angle, int angleDirection) {
+ 
+		int[] xCoords = new int[3];
+		int[] yCoords = new int[3];
+		
+
+		for (int i = 0; i < 3; i++) {
+			double ang = 2 * Math.PI * i/3;
+			ang += Math.PI * angle /180.0;
+			
+			
+			
+			xCoords[i] = sx + (int) (size * Math.cos(ang));
+			yCoords[i] = sy - (int) (size * Math.sin(ang));
+			
+
+		}
+		
+		//g.fillPolygon(xCoords, yCoords, 10);
+ 		
+		Polygon p = new Polygon(xCoords, yCoords, 3);
+		g.drawPolygon(p);
+ }
+
+	public void drawUprightTriangle(Graphics g, int sx, int sy, int size, int angle) {
+		int[] xCoords = new int[3];
+		int[] yCoords = new int[3];
+
+		double offset = 1 * Math.PI / 6;
+		for (int i = 0; i < 3; i++) {
+			double ang = offset + 2 * Math.PI * i / 3;
+			xCoords[i] += (int) (size * Math.cos(ang));
+			yCoords[i] += (int) (size * Math.sin(ang));
+			xCoords[i] += sx;
+			yCoords[i] += sy;
+		}
+
+		// g.fillPolygon(xCoords, yCoords, 3);
+
+		Polygon p = new Polygon(xCoords, yCoords, 3);
+		g.drawPolygon(p);
+
+}
+
+}
