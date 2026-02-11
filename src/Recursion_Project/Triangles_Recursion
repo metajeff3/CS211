@@ -1,71 +1,77 @@
 /*
-sub-class of triangle to create recursive triangle designs
-*/
+ * Name: Jeff Spacek
+ * Date: Winter 2026
+ * Description:
+ * This program is a demonstration of recursion by
+ * drawing 3d triangles around the superclass triangle.
+ * Triangles_Recursion is a sub-class
+ * of the triangle class. 
+ */
 
 package assignment_01;
-
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
 public class Triangles_Recursion extends triangle {
-    private static Random rand = new Random();
 
-    Triangles_Recursion(int screenWidth, int screenHeight, int howManyTriangles, int triangleMaxSize) {
-        super();
-    }
+	// used to generate random colors
+	private static Random rand = new Random();
 
-    @Override
-    public void drawTriangle(Graphics g, int sx, int sy, int size, int angle, int angleSpeed) {
-        if (size < 3){
-            return;
-        } 
+	Triangles_Recursion(int screenWidth, int screenHeight, int howManyStars, int starSize) {
+		super(screenWidth, screenHeight, howManyStars, starSize);
+	}
 
-        int R = rand.nextInt(255);
-        int G = rand.nextInt(255);
-        int B = rand.nextInt(255);
+	// method for drawing recursive triangles
+	@Override
+	public void drawTriangle(Graphics g, int tx, int ty, int size, int angle) {
 
-        g.setColor(new Color(R, G, B));
+		// fail safe: stop recursion when triangle is too small
+		if (size < 5) {
+			return;
+		}
 
-        design2(g, sx, sy, size, angle);
-    }
+		// generate a random color for this triangle
+		int R = rand.nextInt(255);
+		int G = rand.nextInt(255);
+		int B = rand.nextInt(255);
 
-    private void design1(Graphics g, int sx, int sy, int size, int angle) {
-        super.drawTriangle(g, sx, sy, size, angle, angle);
+		//
+		g.setColor(new Color(R, G, B));
 
-        double offset = 1 * Math.PI/ 6; 
-        for (int i = 0; i < 3; i++) {
-            int xCoords = 0;
-            int yCoords = 0;
+		// call recursive design(s) method (03 because triangle)
+		design_03(g, tx, ty, size, angle);
+	}
 
-            double ang = offset + 2 * Math.PI * i / 3;
-            xCoords += (int) (size * Math.cos(ang));
-            yCoords += (int) (size * Math.sin(ang));
-            xCoords += sx;
-            yCoords += sy;
-            this.drawTriangle(g, xCoords, yCoords, size/2, angle, angle);
-        }
-    }
+	private void design_03(Graphics g, int tx, int ty, int size, int angle) {
 
-    private void design2(Graphics g, int sx, int sy, int size, int angle) {
-        super.drawTriangle(g, sx, sy, size, angle, angle);
-        for (int i = 0; i < 3; i++) {
-            int xCoords = 0;
-            int yCoords = 0;
+		// draws the triangle from triangle class
+		super.drawTriangle(g, tx, ty, size, angle);
 
-            double ang = 2 * Math.PI * i / 3;
-            ang += Math.PI * angle/ 90;
-            xCoords += (int) (size * Math.cos(ang));
-            yCoords += (int) (size * Math.sin(ang));
-            xCoords += sx;
-            yCoords += sy;
-            this.drawTriangle(g, xCoords, yCoords, size/2, angle, angle);
-        }
-    }
+		// smaller triangles section
+		// create three smaller triangles around the super-class triangle
+		for (int i = 0; i < 3; i++) {
 
-	public void start() {
-		// TODO Auto-generated method stub
-		
+			// calculate rotation angle for each child triangle
+			double ang = 2 * Math.PI * i / 3;
+			ang += Math.PI * angle / 60;
+
+			// initialize coordinates for the
+			int xCoords = 0;
+			int yCoords = 0;
+
+			// trigonometry to position each small triangle
+			// commented out for fun cool effect
+			xCoords += (int) (size * Math.cos(ang));
+			yCoords += (int) (size * Math.sin(ang));
+
+			// offset the position relative to the parent triangle
+			xCoords += tx;
+			yCoords += ty;
+
+			// recursive call with reduced size to continue the pattern
+			this.drawTriangle(g, xCoords, yCoords, size / 2, angle);
+		}
 	}
 }
